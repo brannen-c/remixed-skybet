@@ -1,15 +1,19 @@
-import { LoaderArgs, redirect } from "@remix-run/node";
-import { useLoaderData, useParams } from "@remix-run/react";
+import { type LoaderArgs, redirect, json } from "@remix-run/node";
+import { Link, useLoaderData, useParams } from "@remix-run/react";
 import { getClassEvents } from "~/lib/getClass";
-import { unslugify } from "~/utils";
+import { slugify, unslugify } from "~/utils";
 
 export async function loader({ params }: LoaderArgs) {
   try {
     const { className } = params;
 
-    const data = await getClassEvents(unslugify(className));
-    if (data) {
-      return data;
+    if (!className) {
+      throw new Error("Empty className parameter");
+    }
+
+    const { events } = await getClassEvents(unslugify(className));
+    if (events) {
+      return json(events);
     }
     throw new Error(`Null class data for ${className}`);
   } catch (e) {
@@ -20,7 +24,22 @@ export async function loader({ params }: LoaderArgs) {
 
 export default function Index() {
   const { className } = useParams();
-  const data = useLoaderData<typeof loader>();
-  console.log(data);
-  return <div>{className ? unslugify(className) : null}</div>;
+  const events = useLoaderData<typeof loader>();
+
+  return (
+    <>
+      <h1>{className ? unslugify(className) : null}</h1>
+      <ul>
+        {events.map(({ eventId, name, eventType }) => (
+          <li key={eventId}>
+            <Link
+              to={`/${className}/${slugify(eventType.name)}/event/${eventId}`}
+            >
+              {name}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </>
+  );
 }

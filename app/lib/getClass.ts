@@ -143,7 +143,7 @@ export async function getClassEvents(className: string) {
   );
   const result = await res.json();
   const data: EventClassWithEvents[] = result.data.eventClasses;
-  console.log("Reque");
+
   return data[0];
 }
 

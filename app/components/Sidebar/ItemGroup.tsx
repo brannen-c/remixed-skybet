@@ -1,3 +1,4 @@
+import { Link } from "@remix-run/react";
 import type { MenuItemGroup } from "~/types";
 
 export default function ItemGroup({ itemGroup }: { itemGroup: MenuItemGroup }) {
@@ -9,8 +10,8 @@ export default function ItemGroup({ itemGroup }: { itemGroup: MenuItemGroup }) {
         <>
           {itemGroup.links.map(({ id, icon, link, title }) => (
             <li key={id} className="my-px">
-              <a
-                href={link}
+              <Link
+                to={link}
                 className="flex flex-row items-center h-10 px-3 rounded-lg text-gray-300"
               >
                 <span className="w-6 flex items-center justify-center text-lg text-gray-400">
@@ -29,7 +30,7 @@ export default function ItemGroup({ itemGroup }: { itemGroup: MenuItemGroup }) {
                   ) : null}
                 </span>
                 <span className="ml-3">{title}</span>
-              </a>
+              </Link>
             </li>
           ))}
         </>

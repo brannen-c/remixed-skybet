@@ -1,10 +1,10 @@
 import { slugify } from "~/utils";
 import { fetcher } from "./common";
 
-export const getType = async (typeId: string) => {
+export const getType = async (typeName: string) => {
   const res = await fetcher(
-    `query EventType($typeId:Int!, $eventFilter: EventFilter!) {
-              eventType(typeId: $typeId) {
+    `query EventType($eventTypeFilter: EventTypeFilter!, $eventFilter: EventFilter!) {
+              eventTypes(filter: $eventTypeFilter) {
                 name
                 classId
                 typeId
@@ -21,14 +21,14 @@ export const getType = async (typeId: string) => {
             }
             `,
     {
-      typeId,
+      eventTypeFilter: { name: { EQ: typeName } },
       eventFilter: {
         status: { displayable: true },
       },
     }
   );
   const result = await res.json();
-  const data: EventTypeData = result.data.eventType;
+  const data: EventTypeData = result.data.eventTypes[0];
 
   return data;
 };

@@ -57,7 +57,7 @@ export async function loader() {
         .map((i) => ({
           id: i.classId.toString(),
           title: i.name,
-          link: slugify(i.name),
+          link: `${slugify(i.name)}`,
         })),
     },
   ];
