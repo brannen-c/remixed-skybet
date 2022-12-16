@@ -16,7 +16,7 @@ export default function ItemGroup({ itemGroup }: { itemGroup: MenuItemGroup }) {
                 className="flex flex-row items-center h-10 px-3 rounded-lg text-gray-300"
               >
                 <span className="w-6 flex items-center justify-center text-lg text-gray-400">
-                  <Icon icon={icon} />
+                  <Icon icon={icon} className="w-6 h-6" />
                 </span>
                 <span className="ml-3">{title}</span>
               </Link>

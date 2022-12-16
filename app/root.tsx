@@ -130,7 +130,7 @@ export default function App() {
                 </div>
               </div>
             </header>
-            <div className="main-content flex flex-col flex-grow p-4">
+            <div className="main-content flex flex-col flex-grow">
               <Outlet />
             </div>
             <footer className="footer px-4 py-6">

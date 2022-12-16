@@ -1,5 +1,6 @@
 import { type LoaderArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
+import { EventHeader, Market, NavList } from "~/components";
 import { getEvent } from "~/lib";
 
 export async function loader({ params }: LoaderArgs) {
@@ -16,21 +17,14 @@ export default function Event() {
 
   return (
     <div>
-      <h1>{name}</h1>
+      <NavList />
+      <EventHeader name={name} />
       <ul>
         {markets
           .sort((a, b) => a.displayOrder - b.displayOrder)
-          .map((market) => (
-            <li key={market.marketId}>
-              <h2>{market.name}</h2>
-              <ul>
-                {market.outcomes.map((outcome) => (
-                  <li key={outcome.outcomeId}>
-                    <h3>{outcome.name}</h3>
-                    <div>{outcome.price.decimal}</div>
-                  </li>
-                ))}
-              </ul>
+          .map(({ name, marketId, outcomes }, index) => (
+            <li key={marketId}>
+              <Market name={name} outcomes={outcomes} defaultOpen={index < 3} />
             </li>
           ))}
       </ul>

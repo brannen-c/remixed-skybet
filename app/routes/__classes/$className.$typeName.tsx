@@ -1,5 +1,6 @@
 import { json, redirect, type LoaderArgs } from "@remix-run/node";
-import { Link, useLoaderData } from "@remix-run/react";
+import { Link, useLoaderData, useParams } from "@remix-run/react";
+import { EventListItem, NavList, TypeHeader } from "~/components";
 
 import { getType } from "~/lib";
 import { slugify, unslugify } from "~/utils";
@@ -20,29 +21,32 @@ export async function loader({ params }: LoaderArgs) {
 }
 
 export default function ClassesTypeNameRoute() {
+  const { typeName } = useParams();
   const { name, eventClass, events } = useLoaderData<typeof loader>();
   if (!events) {
     redirect("/");
   }
 
   return (
-    <div>
-      <h1>{name}</h1>
+    <>
+      <NavList />
+      {typeName ? <TypeHeader name={typeName} /> : null}
       <ul>
         {events
           .sort((a, b) => a.displayOrder - b.displayOrder)
           .map((event) => (
-            <li key={event.eventId}>
+            <EventListItem key={event.eventId}>
               <Link
+                className="p-4 flex"
                 to={`/${slugify(eventClass.name)}/${slugify(name)}/event/${
                   event.eventId
                 }`}
               >
                 {event.name}
               </Link>
-            </li>
+            </EventListItem>
           ))}
       </ul>
-    </div>
+    </>
   );
 }

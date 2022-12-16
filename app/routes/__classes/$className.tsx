@@ -1,5 +1,6 @@
 import { type LoaderArgs, redirect, json } from "@remix-run/node";
 import { Link, useLoaderData, useParams } from "@remix-run/react";
+import { ClassHeader, EventListItem } from "~/components";
 import { getClassEvents } from "~/lib/getClass";
 import { slugify, unslugify } from "~/utils";
 
@@ -28,17 +29,21 @@ export default function Index() {
 
   return (
     <>
-      <h1 className="sr-only">{className ? unslugify(className) : null}</h1>
+      {className ? <ClassHeader name={className} /> : null}
       <ul>
-        {events.map(({ eventId, name, eventType }) => (
-          <li key={eventId}>
-            <Link
-              to={`/${className}/${slugify(eventType.name)}/event/${eventId}`}
-            >
-              {name}
-            </Link>
-          </li>
-        ))}
+        {events
+          .sort((a, b) => a.displayOrder - b.displayOrder)
+          .map(({ eventId, name, eventType }) => (
+            <EventListItem key={eventId}>
+              <Link
+                className="p-4 flex flex-col"
+                to={`/${className}/${slugify(eventType.name)}/event/${eventId}`}
+              >
+                <span>{name}</span>
+                <span className="text-sm">{eventType.name}</span>
+              </Link>
+            </EventListItem>
+          ))}
       </ul>
     </>
   );
