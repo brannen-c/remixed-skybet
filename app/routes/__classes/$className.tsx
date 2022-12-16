@@ -28,7 +28,7 @@ export default function Index() {
 
   return (
     <>
-      <h1>{className ? unslugify(className) : null}</h1>
+      <h1 className="sr-only">{className ? unslugify(className) : null}</h1>
       <ul>
         {events.map(({ eventId, name, eventType }) => (
           <li key={eventId}>

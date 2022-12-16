@@ -12,6 +12,7 @@ import { Sidebar } from "./components";
 import { getClasses } from "./lib";
 
 import styles from "./styles/app.css";
+import type { MenuItemGroup } from "./types";
 import { slugify } from "./utils";
 
 export function links() {
