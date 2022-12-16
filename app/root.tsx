@@ -1,4 +1,4 @@
-import type { MetaFunction } from "@remix-run/node";
+import { json, type LoaderArgs, type MetaFunction } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -14,6 +14,7 @@ import { getClasses } from "./lib";
 import styles from "./styles/app.css";
 import type { MenuItemGroup } from "./types";
 import { slugify } from "./utils";
+import { oddsFormat } from "./utils";
 
 export function links() {
   return [{ rel: "stylesheet", href: styles }];
@@ -25,7 +26,9 @@ export const meta: MetaFunction = () => ({
   viewport: "width=device-width,initial-scale=1",
 });
 
-export async function loader() {
+export async function loader({ request }: LoaderArgs) {
+  const cookieHeader = request.headers.get("Cookie");
+  const oddsFormatValue = (await oddsFormat.parse(cookieHeader)) || {};
   const { eventClasses } = await getClasses();
 
   const menuItemGroups: MenuItemGroup[] = [
@@ -63,11 +66,13 @@ export async function loader() {
     },
   ];
 
-  return menuItemGroups;
+  return json({ oddsFormatValue, menuItemGroups });
 }
 
 export default function App() {
-  const menuItemGroups = useLoaderData<typeof loader>();
+  const { menuItemGroups, oddsFormatValue } = useLoaderData<typeof loader>();
+
+  console.log(oddsFormatValue);
   return (
     <html lang="en">
       <head>
@@ -123,6 +128,7 @@ export default function App() {
                     </a>
                   </div>
                 </form>
+
                 <div className="flex ml-auto">
                   <a href="/login" className="flex flex-row items-center">
                     <span className="flex flex-col ml-2">Login</span>
